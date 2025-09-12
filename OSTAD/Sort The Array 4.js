@@ -1,22 +1,28 @@
 function main(input) {
-    const lines = input.trim().split("\n");
-    const N = parseInt(lines[0]);
-    const arr = lines[1].split(" ").map(Number);
-
-    const maxVal = Math.max(...arr);
-    const count = new Array(maxVal + 1).fill(0);
-
-    for (let num of arr) {
-        count[num]++;
+    if (!input) return;
+    const tokens = input.trim().split(/\s+/);
+    const n = Number(tokens[0]) || 0;
+    const values = new Array(n);
+    let max = 0;
+    for (let i = 0; i < n; i++) {
+        const val = Number(tokens[1 + i]);
+        values[i] = val;
+        if (val > max) max = val;
     }
 
-    const result = [];
-    for (let i = 0; i <= maxVal; i++) {
-        while (count[i] > 0) {
-            result.push(i);
-            count[i]--;
+    const counts = new Uint32Array(max + 1);
+    for (let i = 0; i < n; i++) {
+        counts[values[i]]++;
+    }
+
+    const parts = [];
+    for (let v = 0; v <= max; v++) {
+        const c = counts[v];
+        if (c > 0) {
+            parts.push((v + ' ').repeat(c));
         }
     }
 
-    console.log(result.join(" "));
+    const output = parts.join('').trim();
+    console.log(output);
 }
